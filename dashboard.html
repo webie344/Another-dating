@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Bondly</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Testimonial Slider Styles */
+        .testimonial-slider {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            padding: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .testimonial-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            position: relative;
+        }
+        
+        .testimonial-slide {
+            text-align: center;
+            padding: 20px;
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+        
+        .testimonial-slide.active {
+            display: block;
+        }
+        
+        .testimonial-content {
+            font-style: italic;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .testimonial-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .testimonial-dot.active {
+            background: white;
+        }
+        
+        .testimonial-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            z-index: 10;
+        }
+        
+        .testimonial-nav:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .testimonial-nav.prev {
+            left: 10px;
+        }
+        
+        .testimonial-nav.next {
+            right: 10px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .testimonial-content {
+                font-size: 1rem;
+            }
+            
+            .testimonial-author {
+                font-size: 0.9rem;
+            }
+            
+            .testimonial-nav {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+  
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard.html" class="logo">Bondly</a>
+            <div class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="mingle.html">Mingle</a></li>
+                    <li><a href="messages.html">Messages</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="account.html">Account</a></li>
+                    <li><button id="logoutBtn" class="btn btn-outline">Logout</button></li>
+                </ul>
+            </div>
+            <div id="mobile-menu" class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+      <!-- Testimonial Slider -->
+    <div class="testimonial-slider">
+        <div class="testimonial-container">
+            <div class="testimonial-slide active">
+                <p class="testimonial-content">"Bondly helped me find genuine connections in my area. The icebreaker feature made starting conversations so much easier!"</p>
+                <p class="testimonial-author">- Sarah M., New York</p>
+            </div>
+            <div class="testimonial-slide">
+                <p class="testimonial-content">"I've tried many dating apps, but Bondly's approach to meaningful conversations really stands out. Highly recommend!"</p>
+                <p class="testimonial-author">- Michael T., Los Angeles</p>
+            </div>
+            <div class="testimonial-slide">
+                <p class="testimonial-content">"The chat points system encourages quality interactions. I've met amazing people without the usual small talk."</p>
+                <p class="testimonial-author">- Jessica L., Chicago</p>
+            </div>
+                </div>
+            <div class="testimonial-slide">
+                <p class="testimonial-content">"I've met a lot of beautiful women from around the world thanks to bondly."</p>
+                <p class="testimonial-author">- marc., Los angelos</p>
+            </div>
+            
+            <div class="testimonial-nav prev">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="testimonial-nav next">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            
+            <div class="testimonial-controls">
+                <div class="testimonial-dot active" data-slide="0"></div>
+                <div class="testimonial-dot" data-slide="1"></div>
+                <div class="testimonial-dot" data-slide="2"></div>
+            </div>
+        </div>
+    </div>
+
+    <main class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Welcome Back!</h1>
+            <a href="account.html">click to edit profile!!<i class="fas fa-edit"></i></a>
+            <div class="points-balance">
+                <span>Your Chat Points:</span>
+                <span class="chat-points-display">0</span>
+            </div>
+        </div>
+
+        <div class="dashboard-actions">
+            <button id="mingleBtn" class="btn btn-primary">
+                <i class="fas fa-users"></i> Start Mingling
+            </button>
+            <button id="messagesBtn" class="btn btn-primary">
+                <i class="fas fa-envelope"></i> View Messages
+            </button>
+            <button id="profileBtn" class="btn btn-primary">
+                <i class="fas fa-user"></i> My Profile
+            </button>
+            <button id="accountBtn" class="btn btn-primary">
+                <i class="fas fa-cog"></i> Account Settings
+            </button>
+            <button id="purchasePointsBtn" class="btn btn-accent">
+                <i class="fas fa-coins"></i> Buy More Chat Points
+            </button>
+        </div>
+
+        <div class="dashboard-tips">
+            <h2>Tips for Success</h2>
+            <ul>
+                <li>Complete your profile to get more matches</li>
+                <li>Be genuine in your conversations</li>
+                <li>Respect other users' boundaries</li>
+                <li>Use your chat points wisely</li>
+            </ul>
+        </div>
+    </main>
+    
+    <script>
+        // Testimonial Slider Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.testimonial-slide');
+            const dots = document.querySelectorAll('.testimonial-dot');
+            const prevBtn = document.querySelector('.testimonial-nav.prev');
+            const nextBtn = document.querySelector('.testimonial-nav.next');
+            let currentSlide = 0;
+            let slideInterval;
+
+            // Function to show a specific slide
+            function showSlide(n) {
+                // Hide all slides
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                // Adjust index if out of bounds
+                if (n >= slides.length) currentSlide = 0;
+                if (n < 0) currentSlide = slides.length - 1;
+                else currentSlide = n;
+                
+                // Show the selected slide
+                slides[currentSlide].classList.add('active');
+                dots[currentSlide].classList.add('active');
+            }
+            
+            // Next slide function
+            function nextSlide() {
+                showSlide(currentSlide + 1);
+            }
+            
+            // Start auto-sliding
+            function startSlideShow() {
+                slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+            }
+            
+            // Stop auto-sliding
+            function stopSlideShow() {
+                clearInterval(slideInterval);
+            }
+            
+            // Event listeners for navigation
+            nextBtn.addEventListener('click', () => {
+                stopSlideShow();
+                nextSlide();
+                startSlideShow();
+            });
+            
+            prevBtn.addEventListener('click', () => {
+                stopSlideShow();
+                showSlide(currentSlide - 1);
+                startSlideShow();
+            });
+            
+            // Event listeners for dots
+            dots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    stopSlideShow();
+                    const slideIndex = parseInt(this.getAttribute('data-slide'));
+                    showSlide(slideIndex);
+                    startSlideShow();
+                });
+            });
+            
+            // Pause slideshow when user hovers over slider
+            const slider = document.querySelector('.testimonial-slider');
+            slider.addEventListener('mouseenter', stopSlideShow);
+            slider.addEventListener('mouseleave', startSlideShow);
+            
+            // Initialize the slider
+            startSlideShow();
+        });
+    </script>
+    <script type="module" src="message.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

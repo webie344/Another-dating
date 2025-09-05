@@ -1,0 +1,46 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Bondly</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">Bondly</a>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="mingle.html" class="nav-links"><i class="fas fa-fire"></i></a></li>
+                <li class="nav-item"><a href="messages.html" class="nav-links"><i class="fas fa-comments"></i><span class="message-count">0</span></a></li>
+                <li class="nav-item"><a href="account.html" class="nav-links"><i class="fas fa-user"></i></a></li>
+                <li class="nav-item"><a href="#" id="logoutBtn" class="nav-links"><i class="fas fa-sign-out-alt"></i></a></li>
+                <li class="nav-item"><a href="dashboard.html" class="nav-links"><i class="fas fa-dashboard"></i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="messages-container">
+        <div class="messages-header">
+            <h1>Messages</h1>
+            <div class="search-container">
+                <input type="text" placeholder="Search messages..." id="messageSearch">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        
+        <div class="messages-list" id="messagesList">
+            <!-- Message cards will be loaded here -->
+        </div>
+    </div>
+     
+    <script type="module" src="app.js"></script>
+    
+</body>
+</html>

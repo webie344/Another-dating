@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Bondly</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="location.css">
+    <style>
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #ffd6e7;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: skyblue;
+            transition: all 0.3s ease;
+            outline: none;
+            color: #5a3a4a;
+        }
+
+        /* Focus effect */
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: seablue;
+            background-color: lightblue;
+            box-shadow: 0 0 8px rgba(255, 143, 171, 0.2);
+        }
+
+        /* Placeholder styling */
+        input::placeholder,
+        textarea::placeholder {
+            color: #c7a5b3;
+            font-style: courier;
+        }
+
+        /* Location dropdown styles */
+        .location-container {
+            position: relative;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .selected-location {
+            padding: 12px 15px;
+            border: 2px solid #ffd6e7;
+            border-radius: 8px;
+            background-color: #fff9fb;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .location-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ffd6e7;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .country-dropdown, .state-dropdown {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 1px solid #ffd6e7;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8fab' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        .flag-display {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            display: none;
+        }
+
+        .interest-tag {
+            display: inline-block;
+            background-color: #ffd6e7;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 5px 5px 5px 0;
+            font-size: 14px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="logo">Bondly</a>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="mingle.html" class="nav-links"><i class="fas fa-fire"></i></a></li>
+                <li class="nav-item"><a href="messages.html" class="nav-links"><i class="fas fa-comments"></i><span class="message-count">0</span></a></li>
+                <li class="nav-item"><a href="account.html" class="nav-links"><i class="fas fa-user"></i></a></li>
+                <li class="nav-item"><a href="#" id="logoutBtn" class="nav-links"><i class="fas fa-sign-out-alt"></i></a></li>
+                <li class="nav-item"><a href="dashboard.html" class="nav-links"><i class="fas fa-dashboard"></i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="account-container">
+        <div class="account-header">
+            <h1>My Profile</h1>
+            <p>Update your information and preferences</p>
+        </div>
+        <!-- Add this to your account page where you want the toggle button -->
+<!-- Add this to your navbar where you want the theme toggle button to appear -->
+
+</div>
+</div>
+        <div class="account-content">
+            <div class="account-sidebar">
+                <div class="profile-picture-upload">
+                    <img src="images-default-profile.jpg" alt="Profile" id="accountProfileImage">
+                    <label for="profileImageUpload" class="upload-btn">
+                        <i class="fas fa-camera"></i> Change Photo
+                    </label>
+                    <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                    <button class="btn-secondary" id="removeProfileImage">Remove</button>
+                </div>
+                
+                <div class="account-menu">
+                    <button class="menu-item active" data-section="profile">Profile</button>
+                    <button class="menu-item" data-section="settings">Settings</button>
+                    <button class="menu-item" data-section="privacy">Privacy</button>
+                </div>
+            </div>
+            
+            <div class="account-main">
+                <div class="account-section" id="profileSection">
+                    <h2>Profile Information</h2>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="accountName">Name</label>
+                            <input type="text" id="accountName" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="accountAge">Age</label>
+                                <input type="number" id="accountAge" min="18" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="accountGender">Gender</label>
+                                <select id="accountGender" required>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountLocation">Location</label>
+                            <div id="locationContainer" class="location-container">
+                                <div id="selectedLocation" class="selected-location"></div>
+                                <input type="hidden" id="accountLocation" name="location">
+                                <span id="flagDisplay" class="flag-display"></span>
+                                <div id="locationDropdown" class="location-dropdown">
+                                    <select id="countryDropdown" class="country-dropdown">
+                                        <option value="">Select Country</option>
+                                    </select>
+                                    <select id="stateDropdown" class="state-dropdown" style="display: none;">
+                                        <option value="">Select State</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountBio">Bio</label>
+                            <textarea id="accountBio" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Interests (Add up to 5)</label>
+                            <div class="interests-input">
+                                <input type="text" id="accountInterests" placeholder="Add interest">
+                                <button type="button" id="addInterestBtn"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="interests-container" id="accountInterestsContainer"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountPhone">Phone (Optional)</label>
+                            <input type="tel" id="accountPhone">
+                        </div>
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </form>
+                </div>
+                
+                <div class="account-section" id="settingsSection" style="display: none;">
+                    <h2>Account Settings</h2>
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label for="accountEmail">Email</label>
+                            <input type="email" id="accountEmail" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <input type="password" id="confirmNewPassword">
+                        </div>
+                        <button type="submit" class="btn-primary">Update Settings</button>
+                    </form>
+                </div>
+                
+                <div class="account-section" id="privacySection" style="display: none;">
+                    <h2>Privacy Settings</h2>
+                    <form id="privacyForm">
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="showAge" checked>
+                            <label for="showAge">Show my age on profile</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="showLocation" checked>
+                            <label for="showLocation">Show my location on profile</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="showOnlineStatus" checked>
+                            <label for="showOnlineStatus">Show when I'm online</label>
+                        </div>
+                        <button type="submit" class="btn-primary">Save Privacy Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+     <script type="module" src="message.js"></script>
+    <script type="module" src="form.js"></script>
+    <script type="module" src="app.js"></script>
+    <script src="location.js"></script>
+     
+    
+   
+</body>
+</html>

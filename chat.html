@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Bondly</title>
+    <style>
+    body {
+        font-family: 'Nunito', sans-serif;
+    }
+    
+    /* Voice note specific styles */
+.voice-note-indicator {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 15px;
+        background-color: #f5f5f5;
+        border-radius: 25px;
+        margin: 10px 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .voice-note-timer {
+        font-size: 14px;
+        color: #333;
+        font-weight: bold;
+    }
+    
+    .voice-note-controls {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .voice-note-btn {
+        background: none;
+        border: none;
+        color: #ff4757;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+    
+    .voice-note-btn:hover {
+        background-color: rgba(255, 71, 87, 0.1);
+    }
+    
+    .voice-message {
+        max-width: 250px;
+        padding: 12px 15px;
+        border-radius: 18px;
+        margin: 8px 0;
+        position: relative;
+    }
+    
+    .voice-message.sent {
+        background-color: #ff4757;
+        color: white;
+        align-self: flex-end;
+    }
+    
+    .voice-message.received {
+        background-color: #f1f1f1;
+        color: #333;
+        align-self: flex-start;
+    }
+    
+    .voice-message-controls {
+        display: flex;
+        align-items: center;
+        margin-top: 8px;
+    }
+    
+    .voice-message-play-btn {
+        background: none;
+        border: none;
+        color: inherit;
+        font-size: 20px;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.3s;
+    }
+    
+    .voice-message-play-btn:hover {
+        background-color: rgba(255,255,255,0.2);
+    }
+    
+    .voice-message-duration {
+        font-size: 12px;
+        margin-left: 10px;
+        opacity: 0.8;
+    }
+    
+    .waveform {
+        height: 40px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2px;
+    }
+    
+    .waveform-bar {
+        background-color: currentColor;
+        width: 3px;
+        border-radius: 3px;
+        animation: waveform-animation 1.5s infinite ease-in-out;
+        height: 5px;
+    }
+    
+    @keyframes waveform-animation {
+        0%, 100% { height: 5px; }
+        50% { height: 20px; }
+    }
+    
+    /* Update chat input to accommodate voice button */
+    .chat-input {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .voice-note-btn-main {
+        background: none;
+        border: none;
+        color: #ff4757;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+    
+    .voice-note-btn-main:hover {
+        background-color: rgba(255, 71, 87, 0.1);
+    }
+    
+    /* Message Reactions */
+    .message-reactions {
+        display: flex;
+        gap: 5px;
+        margin-top: 5px;
+        flex-wrap: wrap;
+    }
+    
+    .reaction {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 2px 6px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .reaction-count {
+        font-size: 10px;
+        color: #666;
+    }
+    
+    /* Reaction Picker */
+    .reaction-picker {
+        position: fixed;
+        bottom: 70px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        border-radius: 24px;
+        padding: 10px;
+        display: flex;
+        gap: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+    }
+    
+    .reaction-emoji {
+        font-size: 24px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        padding: 5px;
+    }
+    
+    .reaction-emoji:hover {
+        transform: scale(1.3);
+    }
+    
+    /* Reply Preview */
+    .reply-preview {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        background: #f5f5f5;
+        border-left: 3px solid #ff4757;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+    
+    .reply-preview-content {
+        flex: 1;
+        margin-left: 10px;
+        overflow: hidden;
+    }
+    
+    .reply-preview-text {
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #666;
+    }
+    
+    .reply-preview-name {
+        font-size: 12px;
+        font-weight: bold;
+        color: #ff4757;
+    }
+    
+    .reply-preview-cancel {
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 5px;
+    }
+    
+    /* Message context menu */
+    .message-context-menu {
+        position: absolute;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 100;
+        padding: 8px 0;
+        display: none;
+    }
+    
+    .context-menu-item {
+        padding: 10px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+    
+    .context-menu-item:hover {
+        background: #f5f5f5;
+    }
+    
+    /* Swipe for reply */
+    .message-container {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .message-swipe-action {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: #ff4757;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 20px;
+        transform: translateX(100%);
+        transition: transform 0.2s;
+    }
+    
+    .message-container.swiped .message-swipe-action {
+        transform: translateX(0);
+    }
+    
+    .reply-indicator {
+        font-size: 12px;
+        color: #ff4757;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .reply-indicator i {
+        font-size: 10px;
+    }
+    
+    .reply-message-preview {
+        background: rgba(0, 0, 0, 0.05);
+        border-left: 2px solid #ff4757;
+        padding: 4px 8px;
+        margin-bottom: 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <button class="back-btn" id="backToMessages"><i class="fas fa-arrow-left"></i></button>
+            <div class="chat-partner-info">
+                <img src="images-default-profile.jpg" alt="Profile" id="chatPartnerImage">
+                <div>
+                    <h3 id="chatPartnerName">Loading..</h3>
+                    <p class="online-status" id="chatPartnerStatus"><i class="fas fa-circle"></i> Online</p>
+                </div>
+                <i class=" fas fa-phone"
+                style="font-size:18px; cursor:pointer; "
+   onclick="alert('not availble now!')"
+                ></i>
+            <i class=" fas fa-video"
+                style="font-size:18px; cursor:pointer; "
+   onclick="alert('not availble now!')"
+                ></i>
+            <i class="fas fa-ban" 
+                style="font-size:18px; cursor:pointer;float:right; "
+   onclick="alert('profile reported successfully!')"
+                ></i>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be loaded here -->
+        </div>
+        
+        <!-- Reaction Picker -->
+        <div id="reactionPicker" class="reaction-picker" style="display: none;">
+            <!-- Will be populated with emojis via JavaScript -->
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <span id="partnerNameTyping">Partner</span> is typing...
+            </div>
+            
+            <!-- Reply Preview -->
+            <div id="replyPreview" class="reply-preview" style="display: none;">
+                <div class="reply-preview-content">
+                    <div class="reply-preview-name"></div>
+                    <div class="reply-preview-text"></div>
+                </div>
+                <button id="cancelReply" class="reply-preview-cancel">✕</button>
+            </div>
+            
+            <!-- Voice note recording indicator -->
+            <div class="voice-note-indicator" id="voiceNoteIndicator">
+                <div class="voice-note-timer" id="voiceNoteTimer">0:00</div>
+                <div class="voice-note-controls">
+                    <button class="voice-note-btn" id="cancelVoiceNoteBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <button class="voice-note-btn" id="sendVoiceNoteBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <button class="attachment-btn" id="attachmentBtn"><i class="fas fa-paperclip"></i></button>
+                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                <button class="voice-note-btn-main" id="voiceNoteBtn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                <button class="send-btn" id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script type="module" src="app.js"></script>
+     <script type="module" src="pic.js"></script>
+    <script type="module" src="message.js"></script>
+</body>
+</html>
