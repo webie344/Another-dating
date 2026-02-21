@@ -1,0 +1,2843 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat - BondBase</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons (Modern Line Icons) -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Add this AFTER Feather Icons but BEFORE your stream.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <link rel="stylesheet" href="styl.css">
+    <style>
+        /* ==========================================================================
+           VOICE CHANNELS SECTION STYLES
+           ========================================================================== */
+          .voice-message-container {
+    cursor: pointer;
+}
+    .message-content-wrapper {
+    margin-left: 46px !important;
+    display: block !important;
+}
+/* Add this to your existing CSS or in a style tag in your HTML */
+/* ADD THIS - More specific selector */
+.message-group .message-header {
+    display: flex !important;
+    align-items: flex-start !important; /* Change from center */
+    flex-wrap: wrap !important;
+}
+/* WhatsApp Dark Messages - All Dark Gray */
+.message-text {
+    padding: 8px 12px !important;
+    border-radius: 12px !important;
+    max-width: 80% !important;
+    word-wrap: break-word !important;
+    margin-bottom: 4px !important;
+}
+
+/* REMOVED ALL BACKGROUND COLORS FROM MESSAGES */
+/* Your messages (sent by you) - NO BACKGROUND */
+.message-text[style*="margin-left: auto;"] {
+    background: transparent !important; /* NO BACKGROUND */
+    color: #e9edef !important; /* Light text */
+    border: none !important; /* NO BORDER */
+    margin-left: auto !important;
+}
+
+/* Others' messages - NO BACKGROUND */
+.message-text[style*="margin-right: auto;"] {
+    background: transparent !important; /* NO BACKGROUND */
+    color: #e9edef !important; /* Light text */
+    border: none !important; /* NO BORDER */
+    margin-right: auto !important;
+}
+
+/* System messages */
+.system-message {
+    background: transparent !important;
+    color: #8696a0 !important;
+    font-style: italic !important;
+    text-align: center !important;
+    padding: 4px 0 !important;
+}
+.message-group .message-content {
+    margin-left: 46px !important;
+    width: calc(100% - 46px) !important;
+    display: block !important;
+    clear: both !important;
+}
+/* Entire message block gets the margin */
+.message-text {
+    margin-left: 46px !important;
+    display: block !important;
+    width: calc(100% - 46px) !important;
+}
+
+/* Remove individual margins since parent has it */
+.message-text .replying-to {
+    margin-left: 0 !important;
+}
+
+.message-text .message-content-wrapper {
+    margin-left: 0 !important;
+}
+/* Make sure avatar doesn't stretch */
+.message-group .message-avatar-container {
+    flex: 0 0 auto !important;
+    width: 36px !important;
+    height: 36px !important;
+}
+
+/* Force content to appear below header */
+.message-group .message-sender-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.message-group .message-time {
+    flex: 0 0 auto !important;
+}
+/* Remove ALL hover effects from voice messages */
+.voice-message-container {
+    transition: none !important;
+    animation: none !important;
+}
+
+.voice-message-container:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    transform: none !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* Remove hover from voice message play button */
+.voice-message-play {
+    transition: none !important;
+}
+
+.voice-message-play:hover {
+    transform: none !important;
+    background: white !important;
+    color: var(--primary) !important;
+    box-shadow: none !important;
+}
+
+/* Remove hover from voice message waveform */
+.voice-message-waveform {
+    transition: none !important;
+}
+
+.voice-message-waveform:hover {
+    transform: none !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Remove hover from progress bar */
+.voice-message-progress {
+    transition: width 0.1s linear !important;
+}
+
+.voice-message-progress:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Remove hover effects from all message elements */
+.message-text {
+    transition: none !important;
+    animation: none !important;
+}
+
+.message-text:hover {
+    background: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    cursor: default !important;
+}
+
+/* Remove hover from message images */
+.message-image {
+    transition: none !important;
+}
+
+.message-image:hover {
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+/* Remove hover from message videos */
+video {
+    transition: none !important;
+}
+
+video:hover {
+    transform: none !important;
+    filter: none !important;
+}
+
+/* Remove hover from reaction bubbles */
+.reaction-bubble {
+    transition: none !important;
+}
+
+.reaction-bubble:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    transform: none !important;
+}
+
+.reaction-bubble.user-reacted:hover {
+    background: rgba(29, 155, 240, 0.1) !important;
+    transform: none !important;
+}
+
+/* Remove hover from message groups */
+.message-group {
+    transition: none !important;
+}
+
+.message-group:hover {
+    background: none !important;
+    transform: none !important;
+}
+
+/* Remove hover from message avatars */
+.message-avatar {
+    transition: none !important;
+}
+
+.message-avatar:hover {
+    transform: none !important;
+    filter: none !important;
+}
+
+/* Remove hover from system messages */
+.system-message {
+    transition: none !important;
+}
+
+.system-message:hover {
+    background: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove hover from reply indicators */
+.replying-to {
+    transition: none !important;
+}
+
+.replying-to:hover {
+    background: rgba(102, 126, 234, 0.1) !important;
+    transform: none !important;
+}
+
+/* Remove all CSS animations that might interfere */
+@keyframes none {
+    0% { transform: none; }
+    100% { transform: none; }
+}
+
+/* Ensure voice messages are clickable without hover interference */
+.voice-message-container * {
+    pointer-events: auto !important;
+}
+
+/* Specifically target and disable any problematic animations */
+.voice-message-container:active,
+.voice-message-container:focus,
+.voice-message-container:focus-within {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Disable any transform transitions */
+* {
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Remove touch feedback on mobile */
+.voice-message-container:active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Ensure play button is always visible and clickable */
+.voice-message-play:active {
+    transform: scale(0.95) !important;
+}
+
+
+
+/* Disable any hover effects from parent containers */
+.message-content-wrapper:hover .voice-message-container,
+.message-content:hover .voice-message-container,
+.message-group:hover .voice-message-container {
+    transform: none !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Remove any glow or shadow effects on hover */
+.voice-message-container:hover::before,
+.voice-message-container:hover::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Ensure no transition delays */
+* {
+    transition-delay: 0s !important;
+    animation-delay: 0s !important;
+}
+
+/* Additional fix for mobile touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .voice-message-container:hover,
+    .voice-message-container:active,
+    .voice-message-container:focus {
+        transform: none !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+    
+    .voice-message-play:hover,
+    .voice-message-play:active {
+        transform: none !important;
+        background: white !important;
+    }
+    
+    .voice-message-waveform:hover {
+        background: rgba(255, 255, 255, 0.3) !important;
+    }
+}
+
+/* Force remove any remaining hover styles */
+.voice-message-container:hover .voice-message-play,
+.voice-message-container:hover .voice-message-waveform,
+.voice-message-container:hover .voice-message-duration {
+    transform: none !important;
+    color: white !important;
+    background: none !important;
+}
+.voice-message-play {
+    cursor: pointer;
+}.message-text {
+    transition: none !important;
+    cursor: default !important;
+}
+
+.message-text:hover {
+    background: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+        /* Icon Styling */
+        .feather {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        /* Voice Channels Main Section */
+        .voice-channels-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            margin: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        .voice-channels-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .voice-channels-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: 0.5px;
+        }
+         .message-group {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Prevent flash of unstyled content */
+.messages-container {
+    will-change: transform;
+    contain: content;
+}
+
+/* Smooth scrolling */
+.messages-container {
+    scroll-behavior: smooth;
+}
+        .voice-channels-header h3 .feather {
+            width: 22px;
+            height: 22px;
+            stroke: #ffdd59;
+            stroke-width: 2.5;
+        }
+
+        .toggle-channels-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .toggle-channels-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(180deg);
+        }
+
+        .toggle-channels-btn .feather {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+        }
+
+        /* Voice Channels Container */
+        .voice-channels-container {
+            display: block;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Voice Channel Card */
+        .voice-channel-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .voice-channel-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+
+        /* Channel Header */
+        .channel-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .channel-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+        }
+
+        .channel-icon .feather {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2.5;
+        }
+
+        .channel-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .channel-name {
+            margin: 0 0 6px 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .channel-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .channel-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        .channel-meta .feather {
+            width: 14px;
+            height: 14px;
+            opacity: 0.8;
+        }
+
+        /* Channel Participants */
+        .channel-participants {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding: 12px 0;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .participants-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .participants-count .feather {
+            width: 16px;
+            height: 16px;
+            stroke: #667eea;
+        }
+
+        .participants-list {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .participant-dot {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+        }
+
+        .participant-dot::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: none;
+        }
+
+        .participant-dot.active::after {
+            display: block;
+        }
+
+        .more-participants {
+            font-size: 12px;
+            color: #888;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        /* Channel Actions */
+        .channel-actions {
+            display: flex;
+            justify-content: center;
+        }
+
+        .join-channel-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            width: 100%;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .join-channel-btn .feather {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+            stroke-width: 2.5;
+        }
+
+        .join-channel-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .join-channel-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .join-channel-btn.active {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .join-channel-btn.active:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .join-channel-btn.full {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.8;
+            box-shadow: none;
+        }
+
+        .join-channel-btn.full:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Start New Channel Button */
+        .start-new-channel {
+            margin-top: 25px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .start-new-channel-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            width: 100%;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            letter-spacing: 0.5px;
+        }
+
+        .start-new-channel-btn .feather {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+        }
+
+        .start-new-channel-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .start-new-channel-btn:active {
+            transform: translateY(0);
+        }
+
+        /* No Voice Channels State */
+        .no-voice-channels {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .no-voice-channels .feather {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            opacity: 0.8;
+            stroke: white;
+            stroke-width: 1.5;
+        }
+
+        .no-voice-channels p {
+            margin-bottom: 25px;
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .start-voice-channel-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .start-voice-channel-btn .feather {
+            width: 18px;
+            height: 18px;
+            stroke: #667eea;
+        }
+
+        .start-voice-channel-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Loading State */
+        .loading-channels {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .loading-channels .feather {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 15px;
+            display: block;
+            animation: spin 1.5s linear infinite;
+            stroke: white;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-channels p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        /* ==========================================================================
+           MINI CALL PLAYER STYLES (For persistent player)
+           ========================================================================== */
+
+        .mini-call-player {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            width: 320px;
+            color: white;
+            display: none;
+            animation: slideUp 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mini Player Header */
+        .mini-player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .mini-player-title {
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .mini-player-title .feather {
+            width: 18px;
+            height: 18px;
+            stroke: #ffdd59;
+            stroke-width: 2.5;
+        }
+
+        .mini-player-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .mini-player-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .mini-player-close .feather {
+            width: 16px;
+            height: 16px;
+            stroke: white;
+        }
+
+        /* Mini Player Content */
+        .mini-player-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mini-player-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .mini-player-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mini-player-channel {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mini-player-participants {
+            font-size: 12px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mini-player-participants .feather {
+            width: 12px;
+            height: 12px;
+            stroke: white;
+        }
+
+        /* Mini Player Controls */
+        .mini-player-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .mini-player-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 16px;
+            flex: 1;
+            max-width: 42px;
+        }
+
+        .mini-player-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .mini-player-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .mini-player-btn.mute {
+            color: #ff6b6b;
+        }
+
+        .mini-player-btn.mute.active {
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .mini-player-btn.open {
+            background: rgba(76, 175, 80, 0.8);
+            flex: 2;
+            max-width: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            gap: 8px;
+        }
+
+        .mini-player-btn.open:hover {
+            background: rgba(76, 175, 80, 0.9);
+        }
+
+        .mini-player-btn .feather {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+        }
+
+        /* ==========================================================================
+           PERSISTENT MINI PLAYER STYLES (Always visible when in voice)
+           ========================================================================== */
+
+        .persistent-mini-player {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50px;
+            padding: 12px 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            z-index: 9998;
+            color: white;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            max-width: 320px;
+            animation: slideUp 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .persistent-mini-player:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            padding-right: 30px;
+        }
+
+        .persistent-player-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .persistent-player-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .persistent-player-channel {
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+            margin-bottom: 2px;
+        }
+
+        .persistent-player-participants {
+            font-size: 11px;
+            opacity: 0.9;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .persistent-player-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            transition: background 0.3s;
+            margin-left: 5px;
+        }
+
+        .persistent-player-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .persistent-player-close .feather {
+            width: 16px;
+            height: 16px;
+            stroke: white;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .voice-channels-section {
+                margin: 10px;
+                padding: 15px;
+                border-radius: 12px;
+            }
+            
+            .voice-channels-header h3 {
+                font-size: 16px;
+            }
+            
+            .voice-channel-card {
+                padding: 15px;
+            }
+            
+            .channel-icon {
+                width: 44px;
+                height: 44px;
+            }
+            
+            .channel-name {
+                font-size: 15px;
+            }
+            
+            .channel-meta {
+                font-size: 12px;
+                gap: 10px;
+            }
+            
+            .join-channel-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .mini-call-player {
+                width: 280px;
+                padding: 15px;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .persistent-mini-player {
+                max-width: 280px;
+                padding: 10px 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .persistent-player-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .persistent-player-channel {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .voice-channels-section {
+                margin: 8px;
+                padding: 12px;
+                border-radius: 10px;
+            }
+            
+            .voice-channels-header {
+                margin-bottom: 15px;
+            }
+            
+            .voice-channels-header h3 {
+                font-size: 15px;
+                gap: 8px;
+            }
+            
+            .voice-channels-header h3 .feather {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .toggle-channels-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .channel-header {
+                gap: 12px;
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+            }
+            
+            .channel-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .channel-name {
+                font-size: 14px;
+                margin-bottom: 4px;
+            }
+            
+            .channel-meta {
+                font-size: 11px;
+                gap: 8px;
+            }
+            
+            .channel-participants {
+                margin-bottom: 15px;
+                padding: 10px 0;
+            }
+            
+            .participants-count {
+                font-size: 13px;
+                gap: 6px;
+            }
+            
+            .participant-dot {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            
+            .start-new-channel-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+                gap: 8px;
+            }
+            
+            .mini-call-player {
+                width: 260px;
+                padding: 12px;
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .mini-player-header {
+                margin-bottom: 15px;
+            }
+            
+            .mini-player-title {
+                font-size: 14px;
+                gap: 8px;
+            }
+            
+            .mini-player-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+            
+            .mini-player-channel {
+                font-size: 13px;
+            }
+            
+            .mini-player-participants {
+                font-size: 11px;
+            }
+            
+            .mini-player-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+            
+            .mini-player-btn.open {
+                font-size: 13px;
+            }
+            
+            .persistent-mini-player {
+                max-width: 260px;
+                padding: 8px 16px;
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .persistent-player-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 13px;
+            }
+            
+            .persistent-player-channel {
+                font-size: 11px;
+            }
+            
+            .persistent-player-participants {
+                font-size: 10px;
+            }
+            
+            .persistent-player-close {
+                width: 24px;
+                height: 24px;
+                font-size: 11px;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
+
+        .voice-channel-card.active-channel {
+            animation: pulse 2s infinite;
+            border: 2px solid #4CAF50;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .channel-icon .feather {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .voice-channel-card {
+            animation: fadeIn 0.5s ease;
+        }
+
+        :root {
+            --primary: #b3004b;
+            --primary-dark: #7a0034;
+            --primary-light: #e63986;
+            --secondary: #8b0000;
+            --accent: #444;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --text-light: #9ca3af;
+            --bg-primary: #0b0b0b;
+            --bg-secondary: #141414;
+            --bg-card: #1a1a1a;
+            --border: #2e2e2e;
+            --accent-color: #b3004b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.8);
+            --radius: 12px;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .back-btn:hover {
+            color: var(--primary-light);
+        }
+
+        .back-btn .feather {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+        }
+
+        .group-header-info {
+            text-align: center;
+        }
+
+        .group-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 10px;
+            border: 2px solid var(--primary);
+        }
+
+        .group-name-sidebar {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .group-members-count {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* CALL BUTTONS STYLES - ADDED SECTION */
+        .call-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .call-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .call-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .call-btn:active {
+            transform: translateY(0);
+        }
+
+        .call-btn.voice-call {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+        }
+
+        .call-btn.voice-call:hover {
+            background: linear-gradient(135deg, #43A047 0%, #1B5E20 100%);
+        }
+
+        .call-btn.group-call {
+            background: linear-gradient(135deg, #2196F3 0%, #0D47A1 100%);
+            color: white;
+        }
+
+        .call-btn.group-call:hover {
+            background: linear-gradient(135deg, #1E88E5 0%, #0A3A7A 100%);
+        }
+
+        .call-btn .feather {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+            stroke-width: 2.5;
+        }
+
+        /* Sidebar content */
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .members-list {
+            margin-bottom: 30px;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .member-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .member-bio {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .member-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #9E9E9E;
+        }
+
+        .member-status.online {
+            background: #00FF00;
+        }
+
+        .rules-list {
+            list-style: none;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .rule-item .feather {
+            width: 16px;
+            height: 16px;
+            stroke: var(--primary-light);
+            stroke-width: 2.5;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* Main Chat Area */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            min-width: 0; /* Important: prevents flex item from expanding */
+        }
+
+        .chat-header {
+            background: var(--bg-card);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .chat-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .chat-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* CHAT HEADER ACTIONS WITH CALL BUTTON - UPDATED */
+        .chat-header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--primary-light);
+        }
+
+        .header-btn .feather {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+
+        /* Messages Container */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--bg-primary);
+            position: relative;
+            width: 100%;
+            background-image: url('darkwallpaper.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+        }
+
+        /* FIX: Ensure message content has proper margin-left */
+        .message-content {
+            margin-left: 52px !important; /* Force the gap between avatar and message */
+            font-size: 0.95rem;
+            line-height: 1.4;
+            width: calc(100% - 52px); /* Ensure it doesn't overflow */
+        }
+
+        .no-messages {
+            text-align: center;
+            color: var(--text-light);
+            padding: 40px 20px;
+            display: none;
+        }
+
+        /* Message Styles (Discord-like) */
+        .message-group {
+            margin-bottom: 20px;
+            position: relative;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0; /* Prevent avatar from shrinking */
+        }
+
+        .message-sender {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-left: 8px;
+            font-weight: normal;
+        }
+
+        .message-text {
+            margin-bottom: 5px;
+            word-wrap: break-word;
+            padding: 8px 12px;
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            color: #e9edef !important;
+            background: transparent !important; /* REMOVED ALL BACKGROUNDS */
+            border: none !important; /* REMOVED ALL BORDERS */
+        }
+
+        /* System message styling */
+        .system-message {
+            background: transparent !important;
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 4px 0;
+            font-size: 12px;
+        }
+
+        /* Reply preview in messages */
+        .replying-to {
+            background: transparent !important;
+            border-left: 3px solid #7289da;
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            max-height: 32px;
+        }
+
+        .replying-to .reply-sender {
+            font-weight: 600;
+            color: #7289da;
+            font-size: 12px;
+            margin: 0 3px;
+            flex-shrink: 0;
+        }
+
+        /* Reply Indicator (shown when replying to a message) */
+        .reply-indicator {
+            background: transparent !important;
+            border-left: 3px solid #7289da;
+            padding: 10px 12px;
+            margin: 0;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            animation: slideDown 0.2s ease;
+            max-height: 44px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reply-indicator-content {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 8px;
+            max-width: calc(100% - 40px);
+        }
+
+        .reply-sender {
+            font-weight: 600;
+            color: #7289da;
+            margin: 0 3px;
+            white-space: nowrap;
+        }
+
+        .cancel-reply {
+            background: none;
+            border: none;
+            color: #7289da;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            min-height: 32px;
+            flex-shrink: 0;
+        }
+
+        .cancel-reply:hover {
+            background: rgba(114, 137, 218, 0.1);
+        }
+
+        .cancel-reply .feather {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+        }
+
+        /* Image messages */
+        .message-image {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        /* Context Menu for Reply/Delete */
+        .message-context-menu {
+            position: fixed;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 9998;
+            display: none;
+            min-width: 160px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .menu-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+        }
+
+        .menu-item .feather {
+            width: 18px;
+            height: 18px;
+            stroke: #666;
+        }
+
+        #deleteMenuItem {
+            color: #ff4757;
+        }
+
+        #deleteMenuItem .feather {
+            stroke: #ff4757;
+        }
+
+        /* Delete Modal Styles */
+        .delete-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            z-index: 2;
+            overflow: hidden;
+            animation: modalAppear 0.3s ease-out;
+            transform-origin: center;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: #f5f5f5;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+            font-weight: 300;
+        }
+
+        .modal-close:hover {
+            background: #e8e8e8;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-body p {
+            margin: 0 0 8px 0;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .modal-warning {
+            color: #ff4757 !important;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 12px !important;
+            padding: 10px;
+            background: rgba(255, 71, 87, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #ff4757;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: #fafafa;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+            min-width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cancel-btn {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .cancel-btn:hover {
+            background: #e8e8e8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #ff4757 0%, #ff2e43 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .delete-btn:hover {
+            background: linear-gradient(135deg, #ff2e43 0%, #ff1932 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        .delete-btn:disabled {
+            background: #ffb8c2;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Prevent scrolling when modal is open */
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* MODERN INPUT AREA STYLES - FIXED FOR WIDER INPUT */
+        .input-container {
+            background: var(--bg-card);
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            position: relative;
+            flex-shrink: 0;
+            width: 100%;
+        }
+
+        .message-input-container {
+            display: flex;
+            align-items: flex-end;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 6px 14px;
+            gap: 8px;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: nowrap;
+        }
+
+        .message-input-container:focus-within {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(230, 57, 134, 0.1);
+        }
+
+        /* Input controls inside the input wrapper */
+        .input-controls-left {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .input-controls-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        /* Buttons inside the input */
+        .inside-input-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .inside-input-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--primary-light);
+        }
+
+        .inside-input-btn .feather {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* Main textarea - FIXED: Now MUCH WIDER */
+        .message-input {
+            flex: 1 1 auto;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            resize: none;
+            max-height: 120px;
+            min-height: 24px;
+            padding: 8px 0;
+            line-height: 1.4;
+            outline: none;
+            width: 100%;
+            min-width: 200px; /* Much wider minimum width */
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: auto;
+            white-space: pre;
+            word-wrap: normal;
+            word-break: keep-all;
+        }
+
+        .message-input::placeholder {
+            color: var(--text-light);
+        }
+
+        /* Send button */
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 0;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        .send-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .send-btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .send-btn .feather {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+            stroke-width: 2.5;
+        }
+
+        /* File Input Button */
+        .file-input-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-input-btn input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Lazy Loading More Indicator */
+        .load-more-container {
+            text-align: center;
+            padding: 20px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .load-more-container.visible {
+            display: block;
+        }
+
+        .load-more-btn {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .load-more-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .load-more-btn .feather {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+        }
+
+        /* Scrollbar Styling */
+        .sidebar-content::-webkit-scrollbar,
+        .messages-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-track,
+        .messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb,
+        .messages-container::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb:hover,
+        .messages-container::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .sidebar.active {
+                display: flex;
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 1000;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .reply-indicator {
+                padding: 8px 10px;
+                font-size: 12px;
+                max-height: 40px;
+            }
+            
+            .reply-indicator-content {
+                max-width: calc(100% - 35px);
+            }
+            
+            .replying-to {
+                padding: 5px 8px;
+                font-size: 11px;
+                max-height: 28px;
+            }
+            
+            .cancel-reply {
+                min-width: 28px;
+                min-height: 28px;
+                padding: 3px 6px;
+            }
+            
+            .cancel-reply .feather {
+                width: 12px;
+                height: 12px;
+            }
+
+            /* Mobile adjustments for modern input */
+            .input-container {
+                padding: 12px 16px;
+            }
+            
+            .message-input-container {
+                padding: 4px 12px;
+            }
+            
+            .inside-input-btn {
+                width: 32px;
+                height: 32px;
+                padding: 6px;
+            }
+            
+            .inside-input-btn .feather {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .send-btn {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .send-btn .feather {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .message-input {
+                font-size: 0.9rem;
+                min-width: 150px;
+            }
+
+            /* Mobile call buttons adjustments */
+            .call-buttons {
+                gap: 8px;
+            }
+
+            .call-btn {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-header {
+                padding: 12px 15px;
+            }
+
+            .messages-container {
+                padding: 15px;
+            }
+
+            .input-container {
+                padding: 10px 12px;
+            }
+            
+            .message-input-container {
+                padding: 3px 10px;
+                border-radius: 20px;
+            }
+            
+            .inside-input-btn {
+                width: 28px;
+                height: 28px;
+                padding: 5px;
+            }
+            
+            .inside-input-btn .feather {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .send-btn {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .send-btn .feather {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .message-input {
+                font-size: 0.85rem;
+                padding: 6px 0;
+                min-height: 20px;
+                min-width: 120px;
+            }
+
+            .reply-indicator {
+                padding: 6px 8px;
+                font-size: 11px;
+                max-height: 36px;
+            }
+            
+            .reply-indicator-content {
+                max-width: calc(100% - 30px);
+            }
+
+            /* Small screen call buttons */
+            .call-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .call-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="back-btn" id="backBtn">
+                    <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back to Groups
+                </button>
+                <div class="group-header-info">
+                    <img src="" alt="Group Avatar" class="group-avatar" id="groupAvatar">
+                    <h3 class="group-name-sidebar" id="groupNameSidebar"></h3>
+                    <p class="chat-subtitle" id="chatSubtitle">..</p>
+                    <p class="group-members-count" id="groupMembersCount"></p>
+                    
+                    <!-- CALL BUTTONS IN SIDEBAR - ADDED -->
+                    <div class="call-buttons">
+                        <button id="groupVoiceCallBtn" class="call-btn group-call" type="button"> 
+                            <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                            Start Group Call
+                        </button>                
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-content">
+                <div class="members-list">
+                    <h4 class="section-title">Members</h4>
+                    <div id="membersList">
+                        <!-- Members will be loaded here -->
+                    </div>
+                </div>
+                <div class="group-rules">
+                    <h4 class="section-title">Group Rules</h4>
+                    <ul class="rules-list" id="rulesList">
+                        <!-- Rules will be loaded here -->
+                    </ul>
+                </div>
+                <!-- In group.html -->
+
+<!-- Customization button -->
+<button id="customizeBtn" class="customization-btn">
+    <i class="fas fa-palette"></i>
+    <span>Customize</span>
+</button>
+
+<style>
+    .customization-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+    
+    .customization-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+</style>
+
+<script>
+    // Just opens the page - NO LOGIC HERE
+    document.getElementById('customizeBtn')?.addEventListener('click', () => {
+        window.open('customization.html', '_blank', 'width=1200,height=800');
+    });
+</script>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <div class="chat-header">
+                <div>
+                    <h2 class="chat-title" id="chatTitle">Loading..</h2>
+                </div>
+                <div class="chat-header-actions">
+                    <button class="header-btn" id="sidebarToggle" type="button">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="header-btn" id="infoBtn" type="button">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <!-- Load more button -->
+                <div class="load-more-container" id="loadMoreContainer">
+                    <button class="load-more-btn" id="loadMoreBtn" type="button">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <polyline points="18 15 12 9 6 15"></polyline>
+                        </svg>
+                        Load Older Messages
+                    </button>
+                </div>
+                
+                <!-- Messages will be loaded here by your JavaScript -->
+            </div>
+
+            <!-- No messages -->
+            <div class="no-messages" id="noMessages">
+                <p>No messages yet. Start the conversation!</p>
+            </div>
+
+            <!-- MODERN INPUT AREA - FIXED FOR WIDER INPUT -->
+            <div class="input-container">
+                <div class="message-input-container">
+                    <!-- Left side controls (inside input) -->
+                    <div class="input-controls-left">
+                        <!-- Attachment button -->
+                        <button class="inside-input-btn file-input-btn" id="attachmentBtn" type="button" title="Attach file">
+                            <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                            <input type="file" id="fileInput" style="display: none;" multiple>
+                        </button>
+                        
+                        <!-- Emoji button -->
+                        <button class="inside-input-btn" id="emojiBtn" type="button" title="Insert emoji">
+                            <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Main textarea - FIXED: Now stays on one line with horizontal scroll -->
+                    <textarea 
+                        class="message-input" 
+                        id="messageInput" 
+                        placeholder="Type your message here..."
+                        rows="1"
+                        wrap="off"></textarea>
+                    
+                    <!-- Right side controls (inside input) -->
+                    <div class="input-controls-right">
+                        <!-- You could add more buttons here if needed -->
+                    </div>
+                    
+                    <!-- Send button -->
+                    <button class="send-btn" id="sendBtn" disabled type="button" title="Send message">
+                        <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import the calls module for voice calls -->
+    <script type="module" src="edi.js"></script>
+    <script type="module" src="calls.js"></script>
+    <script type="module" src="group-chats.js"></script>
+    <script type="module" src="chat-customization.js"></script>
+
+    
+    <script type="module" src="additional-group.js"></script>
+    
+    <script>
+    // Fix for voice message play button click issue
+    (function() {
+        // Wait for DOM to be fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', fixVoiceMessageClick);
+        } else {
+            fixVoiceMessageClick();
+        }
+        
+        function fixVoiceMessageClick() {
+            console.log('Fixing voice message click issues...');
+            
+            // Fix existing voice messages
+            fixExistingVoiceMessages();
+            
+            // Also watch for new voice messages being added dynamically
+            setupMutationObserver();
+        }
+        
+        function fixExistingVoiceMessages() {
+            // Find all voice message containers
+            const voiceContainers = document.querySelectorAll('.voice-message-container');
+            
+            voiceContainers.forEach(container => {
+                fixVoiceMessageContainer(container);
+            });
+        }
+        
+        function fixVoiceMessageContainer(container) {
+            // Remove any existing click handlers that might be interfering
+            container.onclick = null;
+            container.onmouseenter = null;
+            container.onmouseleave = null;
+            
+            // Find the play button inside this container
+            const playBtn = container.querySelector('.voice-message-play');
+            const waveform = container.querySelector('.voice-message-waveform');
+            
+            if (playBtn) {
+                // Remove all existing event listeners from play button
+                const newPlayBtn = playBtn.cloneNode(true);
+                playBtn.parentNode.replaceChild(newPlayBtn, playBtn);
+                
+                // Get the unique ID from the container or create one
+                const containerId = container.id || container.dataset.messageId || 'voice-' + Date.now();
+                const playBtnId = 'playBtn-' + containerId;
+                const playIconId = 'playIcon-' + containerId;
+                const waveformId = 'waveform-' + containerId;
+                const progressId = 'waveformProgress-' + containerId;
+                const durationId = 'duration-' + containerId;
+                
+                // Set IDs for easier access
+                newPlayBtn.id = playBtnId;
+                const playIcon = newPlayBtn.querySelector('i');
+                if (playIcon) playIcon.id = playIconId;
+                
+                // Try to find the audio element
+                let audio = container._audio;
+                
+                // If no audio element exists, try to create one from data attributes
+                if (!audio && container.dataset.voiceUrl) {
+                    audio = new Audio(container.dataset.voiceUrl);
+                    container._audio = audio;
+                }
+                
+                if (audio) {
+                    // Set up the play button click handler
+                    newPlayBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        
+                        if (audio.paused) {
+                            audio.play();
+                        } else {
+                            audio.pause();
+                        }
+                    });
+                    
+                    // Set up audio event listeners
+                    audio.addEventListener('play', function() {
+                        const icon = document.getElementById(playIconId);
+                        if (icon) {
+                            icon.className = 'fas fa-pause';
+                        }
+                    });
+                    
+                    audio.addEventListener('pause', function() {
+                        const icon = document.getElementById(playIconId);
+                        if (icon) {
+                            icon.className = 'fas fa-play';
+                        }
+                    });
+                    
+                    audio.addEventListener('timeupdate', function() {
+                        if (audio.duration) {
+                            const progress = (audio.currentTime / audio.duration) * 100;
+                            const progressBar = document.getElementById(progressId);
+                            if (progressBar) {
+                                progressBar.style.width = progress + '%';
+                            }
+                            
+                            // Update duration display
+                            const currentMinutes = Math.floor(audio.currentTime / 60);
+                            const currentSeconds = Math.floor(audio.currentTime % 60);
+                            const durationElement = document.getElementById(durationId);
+                            if (durationElement) {
+                                durationElement.textContent = 
+                                    currentMinutes.toString().padStart(2, '0') + ':' + 
+                                    currentSeconds.toString().padStart(2, '0');
+                            }
+                        }
+                    });
+                    
+                    audio.addEventListener('ended', function() {
+                        const icon = document.getElementById(playIconId);
+                        if (icon) {
+                            icon.className = 'fas fa-play';
+                        }
+                        const progressBar = document.getElementById(progressId);
+                        if (progressBar) {
+                            progressBar.style.width = '0%';
+                        }
+                    });
+                }
+            }
+            
+            // Fix waveform click for seeking
+            if (waveform) {
+                waveform.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    const audio = container._audio;
+                    if (audio && audio.duration) {
+                        const rect = e.target.getBoundingClientRect();
+                        const clickX = e.clientX - rect.left;
+                        const percentage = clickX / rect.width;
+                        audio.currentTime = audio.duration * percentage;
+                    }
+                });
+            }
+            
+            // Prevent container click from interfering with button clicks
+            container.addEventListener('click', function(e) {
+                // Only handle container click if not clicking on button or waveform
+                if (!e.target.closest('.voice-message-play') && 
+                    !e.target.closest('.voice-message-waveform')) {
+                    
+                    const audio = container._audio;
+                    if (audio) {
+                        if (audio.paused) {
+                            audio.play();
+                        } else {
+                            audio.pause();
+                        }
+                    }
+                }
+            });
+            
+            // Add a small CSS fix to ensure clicks work
+            const style = document.createElement('style');
+            style.textContent = `
+                .voice-message-container * {
+                    pointer-events: auto !important;
+                }
+                
+                .voice-message-container {
+                    cursor: pointer !important;
+                }
+                
+                .voice-message-play {
+                    z-index: 10 !important;
+                    position: relative !important;
+                }
+                
+                .voice-message-waveform {
+                    z-index: 5 !important;
+                    position: relative !important;
+                }
+            `;
+            container.appendChild(style);
+        }
+        
+        function setupMutationObserver() {
+            // Watch for new voice messages being added to the DOM
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // Element node
+                                // Check if this is a voice message container
+                                if (node.classList && node.classList.contains('voice-message-container')) {
+                                    fixVoiceMessageContainer(node);
+                                }
+                                
+                                // Check for voice messages inside the added node
+                                const voiceContainers = node.querySelectorAll('.voice-message-container');
+                                voiceContainers.forEach(container => {
+                                    fixVoiceMessageContainer(container);
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Start observing the document body for changes
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+    })();
+    
+    // Fix for file input button
+    document.getElementById('attachmentBtn')?.addEventListener('click', function() {
+        document.getElementById('fileInput')?.click();
+    });
+
+    // Fix for textarea - keep it on one line with horizontal scroll
+    const textarea = document.getElementById('messageInput');
+    if (textarea) {
+        // Remove auto-resize for vertical expansion
+        textarea.style.height = 'auto';
+        textarea.style.overflowX = 'auto';
+        textarea.style.overflowY = 'hidden';
+        textarea.style.whiteSpace = 'pre';
+        
+        // Optional: Add horizontal scroll as user types
+        textarea.addEventListener('input', function() {
+            // No height adjustment - stays single line
+            this.scrollLeft = this.scrollWidth; // Auto-scroll to the end
+        });
+    }
+    </script>
+</body>
+</html>
